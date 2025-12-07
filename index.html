@@ -148,7 +148,7 @@
         function endGame() {
             clearInterval(gameTimer); clearInterval(moleTimer); isPlaying = false;
             document.querySelectorAll('.grid-cell').forEach(cell => cell.innerText = '');
-            alert("ستوب! جبتي" + score); confetti({ particleCount: 200, spread: 100 });
+            alert("ستوب! جبتي : " + score); confetti({ particleCount: 200, spread: 100 });
         }
     </script>
 </body>
