@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Blooming Trio 🌸</title>
+    <title>The Trio Arcade 🎀</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #a18cd1);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            background: linear-gradient(135deg, #fff1eb 0%, #ace0f9 100%);
             font-family: 'Quicksand', sans-serif;
             text-align: center;
             min-height: 100vh;
@@ -22,19 +20,311 @@
             padding-bottom: 50px;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
         h1 {
             font-family: 'Pacifico', cursive;
-            color: #fff;
-            font-size: 2.8rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            color: #ff6b81;
+            font-size: 2.5rem;
             margin-top: 20px;
-            margin-bottom: 10px;
+            text-shadow: 2px 2px #fff;
+        }
+
+        /* --- MUSIC PLAYER --- */
+        .music-card {
+            background: white;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            width: 90%;
+            max-width: 350px;
+            border: 2px solid #ffc2d1;
+        }
+        iframe { border-radius: 10px; width: 100%; height: 80px; border: none; }
+
+        /* --- TABS --- */
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.5);
+            padding: 5px;
+            border-radius: 30px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            color: #777;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            background: #ff9a9e;
+            color: white;
+            box-shadow: 0 4px 10px rgba(255, 154, 158, 0.4);
+        }
+
+        .game-section {
+            display: none;
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: fadeIn 0.5s;
+        }
+
+        .game-section.active-section { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- ORACLE STYLES --- */
+        input[type="text"] {
+            width: 80%;
+            padding: 12px;
+            border: 2px solid #fad0c4;
+            border-radius: 15px;
+            font-family: 'Quicksand', sans-serif;
+            margin-bottom: 15px;
+            text-align: center;
+            outline: none;
+        }
+        
+        .oracle-flowers { display: flex; justify-content: center; gap: 15px; margin-top: 10px; }
+        .oracle-btn {
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            background: none; border: none;
+        }
+        .oracle-btn:hover { transform: scale(1.2); }
+        
+        #oracle-answer {
+            margin-top: 20px;
+            min-height: 40px;
+            font-weight: bold;
+            color: #845ec2;
+            font-size: 1.1rem;
+        }
+
+        /* --- CATCH GAME STYLES --- */
+        .game-header { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; }
+        
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 15px;
+        }
+
+        .grid-cell {
+            background: white;
+            height: 80px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            border: none;
+            padding: 10px 30px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 154, 158, 0.4);
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>The Bestie Arcade 🎀</h1>
+
+    <div class="music-card">
+        <div style="font-size:0.9rem; color:#ff6b81; margin-bottom:5px;">Now Playing: Birds of a Feather 🎶</div>
+        <iframe src="https://www.youtube.com/embed/lw4fnauPnLg?start=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+
+    <div class="tab-container">
+        <button class="tab-btn active" onclick="switchTab('oracle')">🔮 The Oracle</button>
+        <button class="tab-btn" onclick="switchTab('catch')">🌸 Catch Game</button>
+    </div>
+
+    <div id="oracle" class="game-section active-section">
+        <h2 style="color:#a18cd1">Spill the Tea ☕️</h2>
+        <p>Ask a Yes/No question, then click a bestie for advice!</p>
+        
+        <input type="text" id="questionInput" placeholder="Ex: Should I buy those shoes?">
+        
+        <div class="oracle-flowers">
+            <button class="oracle-btn" onclick="askOracle('sunflower')">🌻<br><span style="font-size:12px; font-weight:bold; color:#f1c40f">Me</span></button>
+            <button class="oracle-btn" onclick="askOracle('tulip')">🌷<br><span style="font-size:12px; font-weight:bold; color:#ff6b6b">Rana</span></button>
+            <button class="oracle-btn" onclick="askOracle('lotus')">🪷<br><span style="font-size:12px; font-weight:bold; color:#9b59b6">Rafa</span></button>
+        </div>
+
+        <div id="oracle-answer"></div>
+    </div>
+
+    <div id="catch" class="game-section">
+        <h2 style="color:#ff6b81">Catch the Bloom! 🌸</h2>
+        
+        <div class="game-header">
+            <span>Score: <span id="gameScore">0</span></span>
+            <span>Time: <span id="gameTime">30</span>s</span>
+        </div>
+
+        <div class="game-grid">
+            <div class="grid-cell" id="cell-0" onclick="whack(0)"></div>
+            <div class="grid-cell" id="cell-1" onclick="whack(1)"></div>
+            <div class="grid-cell" id="cell-2" onclick="whack(2)"></div>
+            <div class="grid-cell" id="cell-3" onclick="whack(3)"></div>
+            <div class="grid-cell" id="cell-4" onclick="whack(4)"></div>
+            <div class="grid-cell" id="cell-5" onclick="whack(5)"></div>
+            <div class="grid-cell" id="cell-6" onclick="whack(6)"></div>
+            <div class="grid-cell" id="cell-7" onclick="whack(7)"></div>
+            <div class="grid-cell" id="cell-8" onclick="whack(8)"></div>
+        </div>
+
+        <button class="start-btn" onclick="startGame()">Start Game!</button>
+    </div>
+
+    <script>
+        // --- TAB SWITCHING ---
+        function switchTab(tabName) {
+            // Hide all sections
+            document.querySelectorAll('.game-section').forEach(sec => sec.classList.remove('active-section'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected
+            document.getElementById(tabName).classList.add('active-section');
+            event.target.classList.add('active');
+        }
+
+        // --- ORACLE LOGIC ---
+        const answers = {
+            sunflower: [ // "You" (Optimistic/Hype)
+                "Absolutely! Go for it! 🌻",
+                "You only live once, do it!",
+                "I'm sensing a huge YES.",
+                "Slay queen, do it."
+            ],
+            tulip: [ // "Rana" (Sassy/Direct)
+                "Girl, be serious. 💅",
+                "Side eye... but maybe.",
+                "Is it fashion? If yes, then do it.",
+                "Rana says: 'Absolutely not.'"
+            ],
+            lotus: [ // "Rafa" (Chill/Peaceful)
+                "Protect your peace first. 🪷",
+                "If it makes you happy, yes.",
+                "Sleep on it, then decide.",
+                "Does it bring good vibes?"
+            ]
+        };
+
+        function askOracle(type) {
+            const input = document.getElementById('questionInput').value;
+            const output = document.getElementById('oracle-answer');
+            
+            if(input.trim() === "") {
+                output.innerText = "Type a question first, bestie! 🤨";
+                return;
+            }
+
+            const specificAnswers = answers[type];
+            const randomAnswer = specificAnswers[Math.floor(Math.random() * specificAnswers.length)];
+            
+            output.style.opacity = 0;
+            output.innerText = "Thinking...";
+            output.style.opacity = 1;
+
+            setTimeout(() => {
+                output.innerText = randomAnswer;
+                confetti({ particleCount: 30, spread: 50, origin: { y: 0.6 } });
+            }, 500);
+        }
+
+        // --- CATCH GAME LOGIC ---
+        let score = 0;
+        let timeLeft = 30;
+        let gameTimer;
+        let moleTimer;
+        let currentMolePosition = -1;
+        let isPlaying = false;
+        const flowers = ['🌻', '🌷', '🪷'];
+
+        function startGame() {
+            if(isPlaying) return;
+            isPlaying = true;
+            score = 0;
+            timeLeft = 30;
+            document.getElementById('gameScore').innerText = score;
+            document.getElementById('gameTime').innerText = timeLeft;
+
+            gameTimer = setInterval(countDown, 1000);
+            moleTimer = setInterval(showFlower, 700); // Speed of pop-ups
+        }
+
+        function countDown() {
+            timeLeft--;
+            document.getElementById('gameTime').innerText = timeLeft;
+
+            if (timeLeft === 0) {
+                endGame();
+            }
+        }
+
+        function showFlower() {
+            // Clear board
+            document.querySelectorAll('.grid-cell').forEach(cell => cell.innerText = '');
+            
+            // Pick random spot
+            let randomPos = Math.floor(Math.random() * 9);
+            currentMolePosition = randomPos;
+
+            // Pick random flower
+            let randomFlower = flowers[Math.floor(Math.random() * flowers.length)];
+            
+            document.getElementById('cell-' + randomPos).innerText = randomFlower;
+        }
+
+        function whack(pos) {
+            if (!isPlaying) return;
+            
+            if (pos === currentMolePosition) {
+                score++;
+                document.getElementById('gameScore').innerText = score;
+                document.getElementById('cell-' + pos).innerText = '✨'; // Hit effect
+                currentMolePosition = -1; // Prevent double clicking
+            }
+        }
+
+        function endGame() {
+            clearInterval(gameTimer);
+            clearInterval(moleTimer);
+            isPlaying = false;
+            document.querySelectorAll('.grid-cell').forEach(cell => cell.innerText = '');
+            alert("Game Over! You scored: " + score + " points! 💖");
+            confetti({ particleCount: 200, spread: 100 });
+        }
+    </script>
+</body>
+</html>            margin-bottom: 10px;
         }
 
         /* --- MUSIC PLAYER STYLE --- */
